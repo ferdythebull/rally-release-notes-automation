@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Random App Name3243</title>
+
+    <script type="text/javascript" src="https://rally1.rallydev.com/apps/2.0/sdk.js"></script>
+
+    <script type="text/javascript">
+        Rally.onReady(function () {
+                Ext.define("CustomApp",{extend:"Rally.app.TimeboxScopedApp",componentCls:"app",scopeType:"release",comboboxConfig:{fieldLabel:"Select a Release:",labelWidth:100,width:300},scheduledStore:void 0,scheduledGrid:void 0,emailButton:void 0,_getFilters:function(){var releaseFilter=this.getContext().getTimeboxScope().getQueryFilter();this.onScopeChange(releaseFilter)},onScopeChange:function(releaseFilter){var releaseFilter=this.getContext().getTimeboxScope().getQueryFilter();this.scheduledStore?(this.scheduledStore.setFilter(releaseFilter),this.scheduledStore.load({})):this.scheduledStore=Ext.create("Rally.data.wsapi.artifact.Store",{models:["UserStory","Defect"],autoLoad:!0,filters:releaseFilter,listeners:{load:this._onDataLoaded,scope:this}})},_onDataLoaded:function(store,records){if(0!==records.length){var myRecords=[];_.each(records,function(record){var obj={Name:record.get("Name"),FormattedID:record.get("FormattedID"),Release:record.get("Release")._refObjectName};myRecords.push(obj)}),this.scheduledGrid||this._createGrid(store),this.emailButton?(this.remove(this.emailButton),this._createEmailButton(myRecords),this.add(this.emailButton)):(this._createEmailButton(myRecords),this.add(this.emailButton))}},_createGrid:function(store){this.scheduledGrid=Ext.create("Rally.ui.grid.Grid",{store:store,columnCfgs:["FormattedID","Name"],enableEditing:!1}),this.add(this.scheduledGrid)},_createEmailButton:function(myRecords){this.emailButton=Ext.create("Ext.Button",{text:"Send Email",listeners:{load:this._onDataLoaded,scope:this},handler:function(){null!=myRecords&&console.log(myRecords),alert("The email has been sent!"),Ext.Ajax.request({url:"http://localhost:8080/MailApi/mails/createMail",method:"POST",params:{requestParam:"notInRequestBody"},success:function(){console.log("success")},failure:function(){Ext.Msg.alert("Failure to send message")},jsonData:myRecords})}})}});
+
+            Rally.launchApp('CustomApp', {
+                name:"Random App Name3243",
+	            parentRepos:""
+            });
+
+        });
+    </script>
+
+
+    <style type="text/css">
+        
+    </style>
+</head>
+<body>
+</body>
+</html>
